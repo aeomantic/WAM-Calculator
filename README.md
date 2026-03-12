@@ -1,75 +1,78 @@
-# React + TypeScript + Vite
+# WAM Calculator
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A Weighted Average Mark (WAM) calculator for Australian university students. Upload your subject outline and instantly see what marks you need to hit your grade target.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Upload your subject outline** — supports PDF, images, text, markdown, and HTML files
+- **AI-powered extraction** — automatically parses assessments, weights, and due dates using the Groq API
+- **Live WAM calculation** — enter marks as you receive them and see your running WAM update instantly
+- **Grade targets** — see exactly what you need to score on remaining assessments to achieve HD, D, CR, or P
+- **Hurdle marks** — set a minimum pass mark per assessment; failing a hurdle shows a "Technical Fail" warning regardless of your overall WAM
+- **Editable assessments** — adjust max marks, weights, and hurdle thresholds directly in the table
+- **Australian grading scale** — HD (85+), D (75+), CR (65+), P (50+), F (<50)
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+- [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
+- [Vite](https://vite.dev/) (v8 beta)
+- [PDF.js](https://mozilla.github.io/pdf.js/) — PDF text extraction
+- [Groq API](https://groq.com/) — LLM parsing (`llama-3.3-70b-versatile`) and vision fallback (`meta-llama/llama-4-scout-17b-16e-instruct`)
 
-Note: This will impact Vite dev & build performances.
+## Getting Started
 
-## Expanding the ESLint configuration
+### Prerequisites
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Node.js 18+
+- A free [Groq API key](https://console.groq.com/)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Installation
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+git clone https://github.com/aeomantic/WAM-Calculator.git
+cd WAM-Calculator
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Environment Setup
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Create a `.env` file in the project root:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+VITE_GROQ_API_KEY=your_groq_api_key_here
+```
+
+### Running Locally
+
+```bash
+npm run dev
+```
+
+Then open [http://localhost:5173](http://localhost:5173) in your browser.
+
+### Building for Production
+
+```bash
+npm run build
+```
+
+## Deployment
+
+This project is deployed on [Vercel](https://vercel.com/). To deploy your own instance:
+
+1. Push your code to GitHub
+2. Import the repository in Vercel
+3. Add `VITE_GROQ_API_KEY` as an environment variable in your Vercel project settings
+4. Deploy
+
+## How It Works
+
+1. Upload a PDF or image of your subject outline
+2. The app extracts assessment details using PDF.js (text layer) with two AI fallbacks for scanned or complex documents
+3. Enter your marks as you receive results
+4. The calculator shows your current WAM and the marks needed on incomplete assessments to reach each grade band
+5. Set hurdle marks on individual assessments to track technical pass requirements
+
+## License
+
+MIT
